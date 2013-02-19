@@ -22,7 +22,7 @@ import java.lang.*;
  * @author narko
  */
 public class GuiController {
-    public static MainWindow mainWindow;
+    public static MainForm mainForm;
     public void start(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -39,7 +39,7 @@ public class GuiController {
     }
     
     private void createGui() throws Exception {
-        mainWindow = new MainWindow(600, 600);
+        mainForm = new MainForm();
         //throw new Exception();
     }
 }
