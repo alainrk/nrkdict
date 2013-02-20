@@ -9,5 +9,5 @@ package nrkdict;
  * @author narko
  */
 public class Controller {
-    public static void Controller(){}
+    public Controller(){}
 }
