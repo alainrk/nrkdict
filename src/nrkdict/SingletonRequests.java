@@ -1,7 +1,11 @@
 /* TODO: See JAXB for XML definable by XMLSchema */
 package nrkdict;
 
+import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
+import com.sun.org.apache.xpath.internal.jaxp.XPathExpressionImpl;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
@@ -30,6 +34,7 @@ public class SingletonRequests {
 	  }
     }
     
+    /* Creates an XML with associations dictionaryName-dictionaryFile */
     private void createXMLDictNameMapping (String XMLDictNameMapping){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -40,7 +45,7 @@ public class SingletonRequests {
             Element rootElement = doc.createElement("dicts");
             doc.appendChild(rootElement);
             
-            /********************** TEST XML
+            /************ TEST XML *************
             Element a = doc.createElement("prova");
             rootElement.appendChild(a);
             Text text = doc.createTextNode("trallalla");
@@ -51,12 +56,19 @@ public class SingletonRequests {
             ************************************/
             
 
-            // write the content into xml file
+            /* Write the content into xml file */
+            /* Create a transformer */
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
+            /* Create a DOMSource */
             DOMSource source = new DOMSource(doc);
+            /* Create a stream for file to fill with DOM */
             StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+            
+            /* Utils to get the DTD infos from the source and put in new XML 
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,doc.getDoctype().getSystemId());*/
 
+            /* From DOMDocument to result */
             transformer.transform(source, result);
             System.out.println("File saved!");
  
@@ -65,33 +77,125 @@ public class SingletonRequests {
         }
     }
     
+    /* Load in memory (see "currentDict" variable) a dictionary */
     public void loadDict (String dict) 
         throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        DocumentBuilderFactory dictDOMFactory = DocumentBuilderFactory.newInstance();
+        /*DocumentBuilderFactory dictDOMFactory = DocumentBuilderFactory.newInstance();
         dictDOMFactory.setNamespaceAware(true); // never forget this!
         DocumentBuilder builder = dictDOMFactory.newDocumentBuilder();
-        Document dictDoc = builder.parse(XMLDictNameMapping);
+        Document dictDoc = builder.parse(XMLDictNameMapping);*/
     }
+    
     public void getTransl (String word){
         
     }
+    
     public void getAllWords (){
     
     }
+    
     public void createTerm (String word, String transl){
     
     }
+    
     public void removeTerm (String word){
     
     }
+    
     public void modifyTransl (String word, String transl){
     
     }
-    public void createDict (String dict){
     
+    /* Return -1 if already exist the dictionary with "dict" name, else
+     * return 0, and create the item in XML map file and the XML dict file.
+     */
+    public int createDict (String dict){
+        try {
+            System.out.println("DEBUGGING: createdict, main try.");
+            /* XPATH - Check if already exist dict file */
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = null;
+            try {
+                System.out.println("DEBUGGING: createdict, get XMLDictNameMapping for parsing.");
+                doc = docBuilder.parse(XMLDictNameMapping);
+            } catch (SAXException | IOException ex) {
+                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            try {
+                String query = "/dicts/dict/name[text() = '"+dict+"']";
+                System.out.println("DEBUGGING: createdict, query for check exist dict: "+query);
+                XPathExpression expr = xpath.compile(query);
+                /* Necessary for process expression returning by xpath query */
+                Object res = expr.evaluate(doc, XPathConstants.NODESET);
+                NodeList existNode = (NodeList) res;
+                System.out.println("DEBUGGING: createdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
+            } catch (XPathExpressionException | NullPointerException ex1a) {
+                System.out.println("DEBUGGING: createdict, dict does not exist, now creating...");
+                /* CREATION XML: If dict does not exist is launched this catch, creates dict and return 0 
+                 * Same process of createXMLDictNameMapping, see above. */
+                DocumentBuilderFactory docFactory2 = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder2 = docFactory2.newDocumentBuilder();
+                Document docDict = docBuilder2.newDocument();
+                Element rootElement2 = docDict.createElement("words");
+                docDict.appendChild(rootElement2);
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(docDict);
+                StreamResult result = new StreamResult(new File(dict+".xml"));
+                transformer.transform(source, result);
+                System.out.println("New dictionary "+dict+".xml saved!");
+                /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
+                XPathExpression root = null;
+                try {
+                    System.out.println("DEBUGGING: createdict, Create item in XML Map file");
+                    root = xpath.compile("/dicts");
+                } catch (XPathExpressionException ex) {
+                    Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Object rootElem = new Object();
+                try {
+                    rootElem = root.evaluate(doc, XPathConstants.NODESET);
+                } catch (XPathExpressionException ex3) {}
+                NodeList nodes = (NodeList) rootElem;
+                /* Create and append the new dict element */
+                Element newDict = doc.createElement("dict");
+                
+                Element dictName = doc.createElement("name");
+                Text textName = doc.createTextNode(dict);
+                dictName.appendChild(textName);
+                
+                Element dictFile = doc.createElement("file");
+                Text textFile = doc.createTextNode(dict+".xml");
+                dictFile.appendChild(textFile);
+                
+                newDict.appendChild(dictName);
+                newDict.appendChild(dictFile);
+                nodes.item(0).appendChild(newDict);
+                
+                System.out.println("DEBUGGING: createdict, Saving changes in XML Map file...");
+                TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
+                Transformer transformerMap = transformerFactoryMap.newTransformer();
+                DOMSource sourceMap = new DOMSource(doc);
+                StreamResult resultMap = new StreamResult(new File(XMLDictNameMapping));
+                transformerMap.transform(sourceMap, resultMap);
+                System.out.println("DEBUGGING: createdict, Saved changes in XML Map file!");
+                /* SUCCESS */
+                return 0;
+            }
+            System.out.println("DEBUGGING: createdict, dict already exist, return -1");
+            /* If dict already exist, it will not be created */
+            return -1;
+ 
+        } catch (ParserConfigurationException | TransformerException pce) {
+            return -1;
+        }
     }
-    public void removeDict (){
-    
+        
+    public int removeDict (){
+        return 0;
     }
     
 }

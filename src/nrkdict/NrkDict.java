@@ -8,7 +8,8 @@ public class NrkDict {
     public static Controller controller;
     public static SingletonRequests singletonRequests;
     public static GuiController guiController;
-    public static String currentDict;
+    /* TODO: Save String? Or Document? for xpath quesries...Better Document.
+     * public static String currentDict; */
     private static String XMLDictNameMapping;
     public static void main(String[] args) {
         /* Logic Creation */
@@ -20,6 +21,10 @@ public class NrkDict {
         guiController = new GuiController();
         /* GUI launch */
         guiController.start();
+        
+        
+        /* TESTING */
+        singletonRequests.createDict("enit");
     
     }
 }
