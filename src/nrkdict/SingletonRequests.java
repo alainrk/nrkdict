@@ -27,7 +27,7 @@ public class SingletonRequests {
         this.XMLDictNameMapping = XMLDictNameMapping;
         File f = new File(this.XMLDictNameMapping); 
 	  if(f.exists()){
-              System.out.println("XMLDictNameMapping File existed");
+              System.out.println("XMLDictNameMapping File exist");
 	  }else{
                System.out.println("XMLDictNameMapping File not found!\nCreating xml...");
                createXMLDictNameMapping (this.XMLDictNameMapping);
@@ -110,46 +110,17 @@ public class SingletonRequests {
      * return 0, and create the item in XML map file and the XML dict file.
      */
     public int createDict (String dict){
-        try {
-            System.out.println("DEBUGGING: createdict, main try.");
-            /* XPATH - Check if already exist dict file */
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = null;
-            try {
-                System.out.println("DEBUGGING: createdict, get XMLDictNameMapping for parsing.");
-                doc = docBuilder.parse(XMLDictNameMapping);
-            } catch (SAXException | IOException ex) {
-                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            try {
-                String query = "/dicts/dict/name[text() = '"+dict+"']";
-                System.out.println("DEBUGGING: createdict, query for check exist dict: "+query);
-                XPathExpression expr = xpath.compile(query);
-                /* Necessary for process expression returning by xpath query */
-                Object res = expr.evaluate(doc, XPathConstants.NODESET);
-                NodeList existNode = (NodeList) res;
-                System.out.println("DEBUGGING: createdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
-            } catch (XPathExpressionException | NullPointerException ex1a) {
-                System.out.println("DEBUGGING: createdict, dict does not exist, now creating...");
-                
-                /* CREATION XML: If dict does not exist is launched this catch, creates dict and return 0 
-                 * Same process of createXMLDictNameMapping, see above. */
-                createXMLFile(dict);
-                
-                /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
-                createMappingNameXMLFile(dict, doc);
-                
-                /* SUCCESS */
-                return 0;
-            }
+        if (!existDict(dict)){
+            /* CREATION XML: If dict does not exist is launched this catch, creates dict and return 0 
+             * Same process of createXMLDictNameMapping, see above. */
+            createXMLFile(dict);
+            /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
+            createMappingNameXMLFile(dict);
+            /* SUCCESS */
+            return 0;
+        } else {
             System.out.println("DEBUGGING: createdict, dict already exist, return -1");
             /* If dict already exist, it will not be created */
-            return -1;
- 
-        } catch (ParserConfigurationException pse) {
             return -1;
         }
     }
@@ -163,17 +134,51 @@ public class SingletonRequests {
     }
     
     /**** UTILS ****/
-    private void createXMLFile(String dictXMLFile) {
-        DocumentBuilderFactory docFactory2 = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder2 = null;
+    private boolean existDict (String dict){
         try {
-            docBuilder2 = docFactory2.newDocumentBuilder();
+            /* XPATH - Check if already exist dict file */
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = null;
+            try {
+                doc = docBuilder.parse(XMLDictNameMapping);
+            } catch (SAXException | IOException ex) {
+                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            try {
+                String query = "/dicts/dict/name[text() = '"+dict+"']";
+                System.out.println("DEBUGGING: existdict, query for check exist dict: "+query);
+                XPathExpression expr = xpath.compile(query);
+                /* Necessary for process expression returning by xpath query */
+                Object res = expr.evaluate(doc, XPathConstants.NODESET);
+                NodeList existNode = (NodeList) res;
+                System.out.println("DEBUGGING: existdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
+            } catch (XPathExpressionException | NullPointerException ex1a) {
+                System.out.println("DEBUGGING: existdict, dict does not exist.");
+                return false;
+            }
+            System.out.println("DEBUGGING: existdict, dict already exist.");
+            return true;
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Document docDict = docBuilder2.newDocument();
-        Element rootElement2 = docDict.createElement("words");
-        docDict.appendChild(rootElement2);
+        return false;
+    }
+    
+    
+    private void createXMLFile(String dictXMLFile) {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Document docDict = docBuilder.newDocument();
+        Element rootElement = docDict.createElement("words");
+        docDict.appendChild(rootElement);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
         try {
@@ -191,7 +196,21 @@ public class SingletonRequests {
         System.out.println("New dictionary "+dictXMLFile+".xml saved!");
     }
     
-    private void createMappingNameXMLFile(String dict, Document doc) {
+    private void createMappingNameXMLFile(String dict) {
+        /* XPATH - Check if already exist dict file */
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Document doc = null;
+        try {
+            doc = docBuilder.parse(XMLDictNameMapping);
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression root = null;
@@ -238,5 +257,8 @@ public class SingletonRequests {
         }
         System.out.println("DEBUGGING: createdict, Saved changes in XML Map file!");    
     }
+    
+    //TODO: Not yet implemented, check if is it possible remove duplicate code
+    private Document getXMLMapDocument (String XMLDictNameMapping){return null;}
     
 }
