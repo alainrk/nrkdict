@@ -44,17 +44,6 @@ public class SingletonRequests {
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("dicts");
             doc.appendChild(rootElement);
-            
-            /************ TEST XML *************
-            Element a = doc.createElement("prova");
-            rootElement.appendChild(a);
-            Text text = doc.createTextNode("trallalla");
-            a.appendChild(text);
-            Attr attr = doc.createAttribute("attribute");
-            attr.setNodeValue("pino");
-            a.setAttributeNode(attr);
-            ************************************/
-            
 
             /* Write the content into xml file */
             /* Create a transformer */
@@ -129,8 +118,15 @@ public class SingletonRequests {
      * return 0, and remove the item in XML map file and the XML dict file.
      */
     public int removeDict (String dict){
-        
-        return 0;
+        if (existDict(dict)) {
+            removeXMLFile(dict);
+            /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
+            removeMappingNameXMLFile(dict);
+            return 0;
+        } else {
+            System.out.println("DEBUGGING: removedict, dict does not exist, return -1");
+            return -1;
+        }
     }
     
     /**** UTILS ****/
@@ -197,7 +193,6 @@ public class SingletonRequests {
     }
     
     private void createMappingNameXMLFile(String dict) {
-        /* XPATH - Check if already exist dict file */
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
         try {
@@ -215,7 +210,7 @@ public class SingletonRequests {
         XPath xpath = xPathfactory.newXPath();
         XPathExpression root = null;
         try {
-            System.out.println("DEBUGGING: createdict, Create item in XML Map file");
+            System.out.println("DEBUGGING: createMappingNameXMLFile, Create item in XML Map file");
             root = xpath.compile("/dicts");
         } catch (XPathExpressionException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,7 +235,7 @@ public class SingletonRequests {
         newDict.appendChild(dictFile);
         nodes.item(0).appendChild(newDict);
 
-        System.out.println("DEBUGGING: createdict, Saving changes in XML Map file...");
+        System.out.println("DEBUGGING: createMappingNameXMLFile, Saving changes in XML Map file...");
         TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
         Transformer transformer = null;
         try {
@@ -255,7 +250,69 @@ public class SingletonRequests {
         } catch (TransformerException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("DEBUGGING: createdict, Saved changes in XML Map file!");    
+        System.out.println("DEBUGGING: createMappingNameXMLFile, Saved changes in XML Map file!");    
+    }
+    
+    /* Remove the XML file "dict".xml */
+    private void removeXMLFile(String dict){
+        File f = new File(dict+".xml");
+        try{
+            f.delete();
+        } catch(Error err){
+            System.out.println("DEBUGGING: removeXMLFile, error on delete: "+err);
+        }
+        System.out.println("DEBUGGING: removeXMLFile, file "+dict+".xml removed!");
+    }
+
+    private void removeMappingNameXMLFile(String dict){
+        /* XPATH - Check if already exist dict file */
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Document doc = null;
+        try {
+            doc = docBuilder.parse(XMLDictNameMapping);
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        XPathExpression xp = null;
+        try {
+            System.out.println("DEBUGGING: removeMappingNameXMLFile, Remove item in XML Map file");
+            xp = xpath.compile("/dicts/dict[name[text() = '"+dict+"']]");
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Object node2rem = new Object();
+        try {
+            node2rem = xp.evaluate(doc, XPathConstants.NODESET);
+        } catch (XPathExpressionException ex3) {}
+        NodeList node2remList = (NodeList) node2rem;
+
+        /* Go back to parent and remove myself */
+        node2remList.item(0).getParentNode().removeChild(node2remList.item(0));
+
+        System.out.println("DEBUGGING: removeMappingNameXMLFile, Saving changes in XML Map file...");
+        TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
+        Transformer transformer = null;
+        try {
+            transformer = transformerFactoryMap.newTransformer();
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+        try {
+            transformer.transform(source, result);
+        } catch (TransformerException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("DEBUGGING: removeMappingNameXMLFile, Saved changes in XML Map file!");    
     }
     
     //TODO: Not yet implemented, check if is it possible remove duplicate code
