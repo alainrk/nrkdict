@@ -22,6 +22,8 @@ import javax.xml.transform.stream.*;
 public class SingletonRequests {
     private DocumentBuilderFactory dictDOMFactory;
     private String XMLDictNameMapping;
+    /* For DOM access dictNameMapping.xml */
+    private Document doc = null;
 
     public SingletonRequests(String XMLDictNameMapping) {
         this.XMLDictNameMapping = XMLDictNameMapping;
@@ -32,6 +34,20 @@ public class SingletonRequests {
                System.out.println("XMLDictNameMapping File not found!\nCreating xml...");
                createXMLDictNameMapping (this.XMLDictNameMapping);
 	  }
+        /* Create "doc" DOCUMENT for DOM in XMLDictNameMapping access */
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            doc = docBuilder.parse(XMLDictNameMapping);
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     
     /* Creates an XML with associations dictionaryName-dictionaryFile */
@@ -131,36 +147,22 @@ public class SingletonRequests {
     
     /**** UTILS ****/
     private boolean existDict (String dict){
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
         try {
-            /* XPATH - Check if already exist dict file */
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = null;
-            try {
-                doc = docBuilder.parse(XMLDictNameMapping);
-            } catch (SAXException | IOException ex) {
-                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            try {
-                String query = "/dicts/dict/name[text() = '"+dict+"']";
-                System.out.println("DEBUGGING: existdict, query for check exist dict: "+query);
-                XPathExpression expr = xpath.compile(query);
-                /* Necessary for process expression returning by xpath query */
-                Object res = expr.evaluate(doc, XPathConstants.NODESET);
-                NodeList existNode = (NodeList) res;
-                System.out.println("DEBUGGING: existdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
-            } catch (XPathExpressionException | NullPointerException ex1a) {
-                System.out.println("DEBUGGING: existdict, dict does not exist.");
-                return false;
-            }
-            System.out.println("DEBUGGING: existdict, dict already exist.");
-            return true;
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            String query = "/dicts/dict/name[text() = '"+dict+"']";
+            System.out.println("DEBUGGING: existdict, query for check exist dict: "+query);
+            XPathExpression expr = xpath.compile(query);
+            /* Necessary for process expression returning by xpath query */
+            Object res = expr.evaluate(doc, XPathConstants.NODESET);
+            NodeList existNode = (NodeList) res;
+            System.out.println("DEBUGGING: existdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
+        } catch (XPathExpressionException | NullPointerException ex1a) {
+            System.out.println("DEBUGGING: existdict, dict does not exist.");
+            return false;
         }
-        return false;
+        System.out.println("DEBUGGING: existdict, dict already exist.");
+        return true;
     }
     
     
@@ -193,19 +195,7 @@ public class SingletonRequests {
     }
     
     private void createMappingNameXMLFile(String dict) {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
-        try {
-            docBuilder = docFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Document doc = null;
-        try {
-            doc = docBuilder.parse(XMLDictNameMapping);
-        } catch (SAXException | IOException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression root = null;
@@ -265,20 +255,6 @@ public class SingletonRequests {
     }
 
     private void removeMappingNameXMLFile(String dict){
-        /* XPATH - Check if already exist dict file */
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
-        try {
-            docBuilder = docFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Document doc = null;
-        try {
-            doc = docBuilder.parse(XMLDictNameMapping);
-        } catch (SAXException | IOException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression xp = null;
@@ -313,9 +289,5 @@ public class SingletonRequests {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("DEBUGGING: removeMappingNameXMLFile, Saved changes in XML Map file!");    
-    }
-    
-    //TODO: Not yet implemented, check if is it possible remove duplicate code
-    private Document getXMLMapDocument (String XMLDictNameMapping){return null;}
-    
+    }    
 }

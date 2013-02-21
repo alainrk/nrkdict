@@ -27,6 +27,7 @@ public class NrkDict {
         //singletonRequests.createDict("enit");
         //singletonRequests.createDict("spen");
         //singletonRequests.removeXMLFile("enit");
-        singletonRequests.removeDict("enit");
+        singletonRequests.removeDict("spen");
+        
     }
 }
