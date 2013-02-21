@@ -150,22 +150,14 @@ public class SingletonRequests {
     
     /* Check if dict is an item in the XML Map file */
     private boolean existDict (String dict){
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
-        try {
-            String query = "/dicts/dict/name[text() = '"+dict+"']";
-            System.out.println("DEBUGGING: existdict, query for check exist dict: "+query);
-            XPathExpression expr = xpath.compile(query);
-            /* Necessary for process expression returning by xpath query */
-            Object res = expr.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
-            NodeList existNode = (NodeList) res;
-            System.out.println("DEBUGGING: existdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
-        } catch (XPathExpressionException | NullPointerException ex1a) {
-            System.out.println("DEBUGGING: existdict, dict does not exist.");
+        NodeList nodes = getNodeListFromDoc(XML_MAP_DOC, "/dicts/dict/name[text() = '"+dict+"']");
+
+        if (nodes != null){
+            return true;
+        }
+        else {
             return false;
         }
-        System.out.println("DEBUGGING: existdict, dict already exist.");
-        return true;
     }
     
     /* Create an empty dictionary XML file */
@@ -200,20 +192,8 @@ public class SingletonRequests {
     /* Add an item in XML Map File for dict */
     private void addDictItemMap(String dict) {
 
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
-        XPathExpression root = null;
-        try {
-            System.out.println("DEBUGGING: createMappingNameXMLFile, Create item in XML Map file");
-            root = xpath.compile("/dicts");
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Object rootElem = new Object();
-        try {
-            rootElem = root.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
-        } catch (XPathExpressionException ex3) {}
-        NodeList nodes = (NodeList) rootElem;
+        NodeList nodes = getNodeListFromDoc(XML_MAP_DOC, "/dicts");
+        
         /* Create and append the new dict element */
         Element newDict = XML_MAP_DOC.createElement("dict");
 
@@ -259,20 +239,8 @@ public class SingletonRequests {
     }
 
     private void removeDictItemMap(String dict){
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
-        XPathExpression xp = null;
-        try {
-            System.out.println("DEBUGGING: removeMappingNameXMLFile, Remove item in XML Map file");
-            xp = xpath.compile("/dicts/dict[name[text() = '"+dict+"']]");
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Object node2rem = new Object();
-        try {
-            node2rem = xp.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
-        } catch (XPathExpressionException ex3) {}
-        NodeList node2remList = (NodeList) node2rem;
+
+        NodeList node2remList = getNodeListFromDoc(XML_MAP_DOC, "/dicts/dict[name[text() = '"+dict+"']]");
 
         /* Go back to parent and remove myself */
         node2remList.item(0).getParentNode().removeChild(node2remList.item(0));
@@ -299,5 +267,29 @@ public class SingletonRequests {
     /* Take a Document and an XPath Query, and return directly a NodeSet (as a Nodelist)
      * as result of the xquery, if the NodeSet is empty return null
      */
-    private NodeList getNodeListFromDoc (Document doc, String xquery){return null;}
+    private NodeList getNodeListFromDoc (Document doc, String xquery){
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        XPathExpression xp = null;
+        try {
+            System.out.println("DEBUGGING: getNodeListFromDoc, Query: "+xquery);
+            xp = xpath.compile(xquery);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            NodeList nodes = (NodeList) xp.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
+            if (nodes.getLength() != 0) {
+                System.out.println("DEBUGGING: getNodeListFromDoc, NOT Empty node-set!");
+                return nodes;
+            }
+            else {
+                System.out.println("DEBUGGING: getNodeListFromDoc, Empty node-set!");
+                return null;
+            }
+        } catch (XPathExpressionException | NullPointerException ex) {
+            System.out.println("DEBUGGING: getNodeListFromDoc, Error: "+ex.toString());
+            return null;
+        }
+    }
 }

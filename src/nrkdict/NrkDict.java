@@ -20,10 +20,10 @@ public class NrkDict {
         
         
         /* TESTING */
-        singletonRequests.createDict("enit");
-        singletonRequests.createDict("spen");
-        //singletonRequests.removeXMLFile("enit");
-        //singletonRequests.removeDict("spen");
+        //singletonRequests.createDict("enit");
+        //singletonRequests.createDict("spen");
+        singletonRequests.removeDict("spen");
+        singletonRequests.removeDict("enit");
         
     }
 }
