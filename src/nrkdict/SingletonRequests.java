@@ -31,16 +31,15 @@ public class SingletonRequests {
     public SingletonRequests() {
         File f = new File(this.XML_MAP_FILENAME); 
 	  if(f.exists()){
-              System.out.println("XML_MAP_FILENAME File exist");
+              System.out.println(XML_MAP_FILENAME +"File exist");
 	  }else{
-               System.out.println("XML_MAP_FILENAME File not found!\nCreating xml...");
-               createMappingDictFile (this.XML_MAP_FILENAME);
+               System.out.println(XML_MAP_FILENAME +"File not found!\nCreating xml...");
+               createMappingDictFile (XML_MAP_FILENAME);
 	  }
         /* Create "XML_MAP_DOC" DOCUMENT for DOM in XML_MAP_FILENAME access */
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
         try {
-            docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             XML_MAP_DOC = docBuilder.parse(XML_MAP_FILENAME);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
@@ -49,33 +48,61 @@ public class SingletonRequests {
     
     /* Load in memory (see "currentDict" variable) a dictionary */
     public void loadDict (String dict) {
+        CURRENT_DICT_NAME = dict+".xml";
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
         try {
-            docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             CURRENT_DICT_DOC = docBuilder.parse(CURRENT_DICT_NAME);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void getTransl (String word){
-        
+    public String getTransl (String word){
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term/word[text() = '"+word+"']/../transl");
+        return (nodes != null) ? nodes.item(0).getTextContent() : null;
     }
     
     public void getAllWords (){
-    
+        
     }
     
-    public void createTerm (String word, String transl){
-        
+    /* Create new term in current dictionary, on error return -1 */
+    public int createTerm (String word, String transl){
+        try {
+            // TODO: Check if already exist (USE XPATH ID OR SIMILAR IF POSSIBLE
+            NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "terms");
+            if (nodes == null) 
+                return -1;
+            Element termEl = CURRENT_DICT_DOC.createElement("term");
+            Element wordEl = CURRENT_DICT_DOC.createElement("word");
+            Text wordTxt = CURRENT_DICT_DOC.createTextNode(word);
+            Element translEl = CURRENT_DICT_DOC.createElement("transl");
+            Text translTxt = CURRENT_DICT_DOC.createTextNode(transl);
+            nodes.item(0).appendChild(termEl);
+            termEl.appendChild(wordEl);
+            termEl.appendChild(translEl);
+            wordEl.appendChild(wordTxt);
+            translEl.appendChild(translTxt);
+            
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(CURRENT_DICT_DOC);
+            StreamResult result = new StreamResult(new File(CURRENT_DICT_NAME));
+            transformer.transform(source, result);
+            System.out.println("DEBUGGING: createTerm, Dict saved!");
+            return 0;
+        } catch (TransformerException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
     }
     
     public void removeTerm (String word){
     
     }
     
-    public void modifyTransl (String word, String transl){
+    public void modifyTerm (String word, String transl){
     
     }
     
@@ -144,7 +171,7 @@ public class SingletonRequests {
             System.out.println("File saved!");
  
         } catch (ParserConfigurationException | TransformerException pce) {
-              pce.printStackTrace();
+            System.out.println("Error: "+pce.toString());
         }
     }
     
@@ -164,7 +191,7 @@ public class SingletonRequests {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
         Document docDict = docBuilder.newDocument();
-        Element rootElement = docDict.createElement("words");
+        Element rootElement = docDict.createElement("terms");
         docDict.appendChild(rootElement);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
@@ -272,7 +299,7 @@ public class SingletonRequests {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            NodeList nodes = (NodeList) xp.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
+            NodeList nodes = (NodeList) xp.evaluate(doc, XPathConstants.NODESET);
             if (nodes.getLength() != 0) {
                 System.out.println("DEBUGGING: getNodeListFromDoc, NOT Empty node-set!");
                 return nodes;
