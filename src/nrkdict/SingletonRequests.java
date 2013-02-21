@@ -134,19 +134,11 @@ public class SingletonRequests {
                 System.out.println("DEBUGGING: createdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
             } catch (XPathExpressionException | NullPointerException ex1a) {
                 System.out.println("DEBUGGING: createdict, dict does not exist, now creating...");
+                
                 /* CREATION XML: If dict does not exist is launched this catch, creates dict and return 0 
                  * Same process of createXMLDictNameMapping, see above. */
-                DocumentBuilderFactory docFactory2 = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder2 = docFactory2.newDocumentBuilder();
-                Document docDict = docBuilder2.newDocument();
-                Element rootElement2 = docDict.createElement("words");
-                docDict.appendChild(rootElement2);
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(docDict);
-                StreamResult result = new StreamResult(new File(dict+".xml"));
-                transformer.transform(source, result);
-                System.out.println("New dictionary "+dict+".xml saved!");
+                createXMLFile(dict);
+                
                 /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
                 XPathExpression root = null;
                 try {
@@ -193,9 +185,42 @@ public class SingletonRequests {
             return -1;
         }
     }
+    
+    /* Return -1 if does not exist the dictionary with "dict" name, else
+     * return 0, and remove the item in XML map file and the XML dict file.
+     */
+    public int removeDict (String dict){
         
-    public int removeDict (){
         return 0;
     }
+    
+    /**** UTILS ****/
+    private void createXMLFile(String dictXMLFile) {
+        DocumentBuilderFactory docFactory2 = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder2 = null;
+        try {
+            docBuilder2 = docFactory2.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Document docDict = docBuilder2.newDocument();
+        Element rootElement2 = docDict.createElement("words");
+        docDict.appendChild(rootElement2);
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = null;
+        try {
+            transformer = transformerFactory.newTransformer();
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DOMSource source = new DOMSource(docDict);
+        StreamResult result = new StreamResult(new File(dictXMLFile+".xml"));
+        try {
+            transformer.transform(source, result);
+        } catch (TransformerException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("New dictionary "+dictXMLFile+".xml saved!");
+    }  
     
 }
