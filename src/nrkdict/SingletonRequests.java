@@ -20,21 +20,22 @@ import javax.xml.transform.stream.*;
  * @author narko
  */
 public class SingletonRequests {
-    private DocumentBuilderFactory dictDOMFactory;
-    private String XMLDictNameMapping;
-    /* For DOM access dictNameMapping.xml */
-    private Document doc = null;
+    //private DocumentBuilderFactory dictDOMFactory;
+    /* Name and corrispondent DOMDocument for DOM access dictNameMapping.xml */
+    private String XML_MAP_FILENAME = "dictNameMapping.xml";;
+    private Document XML_MAP_DOC = null;
+    /* Current Dictionary DOM XML */
+    private Document CURRENT_DICT_DOC = null;
 
-    public SingletonRequests(String XMLDictNameMapping) {
-        this.XMLDictNameMapping = XMLDictNameMapping;
-        File f = new File(this.XMLDictNameMapping); 
+    public SingletonRequests() {
+        File f = new File(this.XML_MAP_FILENAME); 
 	  if(f.exists()){
-              System.out.println("XMLDictNameMapping File exist");
+              System.out.println("XML_MAP_FILENAME File exist");
 	  }else{
-               System.out.println("XMLDictNameMapping File not found!\nCreating xml...");
-               createXMLDictNameMapping (this.XMLDictNameMapping);
+               System.out.println("XML_MAP_FILENAME File not found!\nCreating xml...");
+               createXMLDictNameMapping (this.XML_MAP_FILENAME);
 	  }
-        /* Create "doc" DOCUMENT for DOM in XMLDictNameMapping access */
+        /* Create "XML_MAP_DOC" DOCUMENT for DOM in XML_MAP_FILENAME access */
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
         try {
@@ -44,34 +45,34 @@ public class SingletonRequests {
         }
         
         try {
-            doc = docBuilder.parse(XMLDictNameMapping);
+            XML_MAP_DOC = docBuilder.parse(XML_MAP_FILENAME);
         } catch (SAXException | IOException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
     /* Creates an XML with associations dictionaryName-dictionaryFile */
-    private void createXMLDictNameMapping (String XMLDictNameMapping){
+    private void createXMLDictNameMapping (String XML_MAP_FILENAME){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
             // root element
-            Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("dicts");
-            doc.appendChild(rootElement);
+            Document XML_MAP_DOC = docBuilder.newDocument();
+            Element rootElement = XML_MAP_DOC.createElement("dicts");
+            XML_MAP_DOC.appendChild(rootElement);
 
             /* Write the content into xml file */
             /* Create a transformer */
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             /* Create a DOMSource */
-            DOMSource source = new DOMSource(doc);
+            DOMSource source = new DOMSource(XML_MAP_DOC);
             /* Create a stream for file to fill with DOM */
-            StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+            StreamResult result = new StreamResult(new File(XML_MAP_FILENAME));
             
             /* Utils to get the DTD infos from the source and put in new XML 
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,doc.getDoctype().getSystemId());*/
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,XML_MAP_DOC.getDoctype().getSystemId());*/
 
             /* From DOMDocument to result */
             transformer.transform(source, result);
@@ -88,7 +89,7 @@ public class SingletonRequests {
         /*DocumentBuilderFactory dictDOMFactory = DocumentBuilderFactory.newInstance();
         dictDOMFactory.setNamespaceAware(true); // never forget this!
         DocumentBuilder builder = dictDOMFactory.newDocumentBuilder();
-        Document dictDoc = builder.parse(XMLDictNameMapping);*/
+        Document dictDoc = builder.parse(XML_MAP_FILENAME);*/
     }
     
     public void getTransl (String word){
@@ -154,7 +155,7 @@ public class SingletonRequests {
             System.out.println("DEBUGGING: existdict, query for check exist dict: "+query);
             XPathExpression expr = xpath.compile(query);
             /* Necessary for process expression returning by xpath query */
-            Object res = expr.evaluate(doc, XPathConstants.NODESET);
+            Object res = expr.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
             NodeList existNode = (NodeList) res;
             System.out.println("DEBUGGING: existdict, after xpath check name dict, expr="+existNode.item(0).getNodeValue());
         } catch (XPathExpressionException | NullPointerException ex1a) {
@@ -207,18 +208,18 @@ public class SingletonRequests {
         }
         Object rootElem = new Object();
         try {
-            rootElem = root.evaluate(doc, XPathConstants.NODESET);
+            rootElem = root.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
         } catch (XPathExpressionException ex3) {}
         NodeList nodes = (NodeList) rootElem;
         /* Create and append the new dict element */
-        Element newDict = doc.createElement("dict");
+        Element newDict = XML_MAP_DOC.createElement("dict");
 
-        Element dictName = doc.createElement("name");
-        Text textName = doc.createTextNode(dict);
+        Element dictName = XML_MAP_DOC.createElement("name");
+        Text textName = XML_MAP_DOC.createTextNode(dict);
         dictName.appendChild(textName);
 
-        Element dictFile = doc.createElement("file");
-        Text textFile = doc.createTextNode(dict+".xml");
+        Element dictFile = XML_MAP_DOC.createElement("file");
+        Text textFile = XML_MAP_DOC.createTextNode(dict+".xml");
         dictFile.appendChild(textFile);
 
         newDict.appendChild(dictName);
@@ -233,8 +234,8 @@ public class SingletonRequests {
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+        DOMSource source = new DOMSource(XML_MAP_DOC);
+        StreamResult result = new StreamResult(new File(XML_MAP_FILENAME));
         try {
             transformer.transform(source, result);
         } catch (TransformerException ex) {
@@ -266,7 +267,7 @@ public class SingletonRequests {
         }
         Object node2rem = new Object();
         try {
-            node2rem = xp.evaluate(doc, XPathConstants.NODESET);
+            node2rem = xp.evaluate(XML_MAP_DOC, XPathConstants.NODESET);
         } catch (XPathExpressionException ex3) {}
         NodeList node2remList = (NodeList) node2rem;
 
@@ -281,8 +282,8 @@ public class SingletonRequests {
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+        DOMSource source = new DOMSource(XML_MAP_DOC);
+        StreamResult result = new StreamResult(new File(XML_MAP_FILENAME));
         try {
             transformer.transform(source, result);
         } catch (TransformerException ex) {
