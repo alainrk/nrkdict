@@ -151,13 +151,7 @@ public class SingletonRequests {
     /* Check if dict is an item in the XML Map file */
     private boolean existDict (String dict){
         NodeList nodes = getNodeListFromDoc(XML_MAP_DOC, "/dicts/dict/name[text() = '"+dict+"']");
-
-        if (nodes != null){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (nodes != null)? true:false;
     }
     
     /* Create an empty dictionary XML file */
@@ -263,7 +257,7 @@ public class SingletonRequests {
         System.out.println("DEBUGGING: removeMappingNameXMLFile, Saved changes in XML Map file!");    
     }
     
-    // TODO: Not yet implemented
+
     /* Take a Document and an XPath Query, and return directly a NodeSet (as a Nodelist)
      * as result of the xquery, if the NodeSet is empty return null
      */
