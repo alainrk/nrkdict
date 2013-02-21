@@ -140,40 +140,8 @@ public class SingletonRequests {
                 createXMLFile(dict);
                 
                 /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
-                XPathExpression root = null;
-                try {
-                    System.out.println("DEBUGGING: createdict, Create item in XML Map file");
-                    root = xpath.compile("/dicts");
-                } catch (XPathExpressionException ex) {
-                    Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Object rootElem = new Object();
-                try {
-                    rootElem = root.evaluate(doc, XPathConstants.NODESET);
-                } catch (XPathExpressionException ex3) {}
-                NodeList nodes = (NodeList) rootElem;
-                /* Create and append the new dict element */
-                Element newDict = doc.createElement("dict");
+                createMappingNameXMLFile(dict, doc);
                 
-                Element dictName = doc.createElement("name");
-                Text textName = doc.createTextNode(dict);
-                dictName.appendChild(textName);
-                
-                Element dictFile = doc.createElement("file");
-                Text textFile = doc.createTextNode(dict+".xml");
-                dictFile.appendChild(textFile);
-                
-                newDict.appendChild(dictName);
-                newDict.appendChild(dictFile);
-                nodes.item(0).appendChild(newDict);
-                
-                System.out.println("DEBUGGING: createdict, Saving changes in XML Map file...");
-                TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
-                Transformer transformerMap = transformerFactoryMap.newTransformer();
-                DOMSource sourceMap = new DOMSource(doc);
-                StreamResult resultMap = new StreamResult(new File(XMLDictNameMapping));
-                transformerMap.transform(sourceMap, resultMap);
-                System.out.println("DEBUGGING: createdict, Saved changes in XML Map file!");
                 /* SUCCESS */
                 return 0;
             }
@@ -181,7 +149,7 @@ public class SingletonRequests {
             /* If dict already exist, it will not be created */
             return -1;
  
-        } catch (ParserConfigurationException | TransformerException pce) {
+        } catch (ParserConfigurationException pse) {
             return -1;
         }
     }
@@ -221,6 +189,54 @@ public class SingletonRequests {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("New dictionary "+dictXMLFile+".xml saved!");
-    }  
+    }
+    
+    private void createMappingNameXMLFile(String dict, Document doc) {
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        XPathExpression root = null;
+        try {
+            System.out.println("DEBUGGING: createdict, Create item in XML Map file");
+            root = xpath.compile("/dicts");
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Object rootElem = new Object();
+        try {
+            rootElem = root.evaluate(doc, XPathConstants.NODESET);
+        } catch (XPathExpressionException ex3) {}
+        NodeList nodes = (NodeList) rootElem;
+        /* Create and append the new dict element */
+        Element newDict = doc.createElement("dict");
+
+        Element dictName = doc.createElement("name");
+        Text textName = doc.createTextNode(dict);
+        dictName.appendChild(textName);
+
+        Element dictFile = doc.createElement("file");
+        Text textFile = doc.createTextNode(dict+".xml");
+        dictFile.appendChild(textFile);
+
+        newDict.appendChild(dictName);
+        newDict.appendChild(dictFile);
+        nodes.item(0).appendChild(newDict);
+
+        System.out.println("DEBUGGING: createdict, Saving changes in XML Map file...");
+        TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
+        Transformer transformer = null;
+        try {
+            transformer = transformerFactoryMap.newTransformer();
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(XMLDictNameMapping));
+        try {
+            transformer.transform(source, result);
+        } catch (TransformerException ex) {
+            Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("DEBUGGING: createdict, Saved changes in XML Map file!");    
+    }
     
 }

@@ -25,6 +25,6 @@ public class NrkDict {
         
         /* TESTING */
         singletonRequests.createDict("enit");
-    
+        singletonRequests.createDict("spen");
     }
 }
