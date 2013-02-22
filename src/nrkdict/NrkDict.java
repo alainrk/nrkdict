@@ -22,13 +22,17 @@ public class NrkDict {
         /* TESTING */
         //singletonRequests.createDict("enit");
         //singletonRequests.createDict("spen");
+        //singletonRequests.createDict("itfi");
+        singletonRequests.removeDict("swit");
         //singletonRequests.removeDict("spen");
         //singletonRequests.removeDict("enit");
-        singletonRequests.loadDict("enit");
+        //singletonRequests.loadDict("itfi");
+        //singletonRequests.removeTerm("guardare");
+        //singletonRequests.createTerm("guardare", "katsoa");
         //singletonRequests.createTerm("water", "acqua");
         //singletonRequests.createTerm("ape", "scimmia");
-        singletonRequests.removeTerm("ape");
-        //System.out.println(singletonRequests.getTransl("water"));
+        //singletonRequests.removeTerm("ape");
+        //System.out.println(singletonRequests.getTransl("guardare"));
         
     }
 }
