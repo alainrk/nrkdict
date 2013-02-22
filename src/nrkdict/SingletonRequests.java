@@ -4,6 +4,7 @@ package nrkdict;
 import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
 import com.sun.org.apache.xpath.internal.jaxp.XPathExpressionImpl;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.*;
@@ -63,8 +64,16 @@ public class SingletonRequests {
         return (nodes != null) ? nodes.item(0).getTextContent() : null;
     }
     
-    public void getAllWords (){
-        
+    public ArrayList<String> getWordsStartWith (String start){
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term/word[starts-with(.,'"+start+"')]");
+        if (nodes == null){
+            return null;
+        }
+        ArrayList words = new ArrayList<String> (nodes.getLength());
+        for (int i=0;i<nodes.getLength();i++){
+            words.add(nodes.item(i).getTextContent());
+        }
+        return words;
     }
     
     /* Create new term in current dictionary, on error return -1 */

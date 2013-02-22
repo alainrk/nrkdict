@@ -1,4 +1,6 @@
 package nrkdict;
+import java.util.ArrayList;
+import java.util.Iterator;
 import nrkdictGUI.*;
 /**
  *
@@ -20,19 +22,30 @@ public class NrkDict {
         
         
         /* TESTING */
-        //singletonRequests.createDict("enit");
-        //singletonRequests.createDict("spen");
-        //singletonRequests.createDict("itfi");
-        singletonRequests.removeDict("swit");
+        singletonRequests.createDict("enit");
+        singletonRequests.createDict("spen");
+        singletonRequests.createDict("itfi");
+        //singletonRequests.removeDict("swit");
         //singletonRequests.removeDict("spen");
         //singletonRequests.removeDict("enit");
-        //singletonRequests.loadDict("itfi");
+        singletonRequests.loadDict("enit");
         //singletonRequests.removeTerm("guardare");
         //singletonRequests.createTerm("guardare", "katsoa");
-        //singletonRequests.createTerm("water", "acqua");
+        singletonRequests.createTerm("water", "acqua");
+        singletonRequests.createTerm("wait", "aspettare");
+        singletonRequests.createTerm("wine", "vino");
+        singletonRequests.createTerm("wool", "lana");
         //singletonRequests.createTerm("ape", "scimmia");
         //singletonRequests.removeTerm("ape");
         //System.out.println(singletonRequests.getTransl("guardare"));
+        
+        ArrayList words = new ArrayList<String> ();
+        words = singletonRequests.getWordsStartWith("wa");
+        Iterator itr = words.iterator();
+        while (itr.hasNext()){
+            System.out.println(itr.next());
+        }
+        //System.out.println(singletonRequests.getWordsStartWith("wa"));
         
     }
 }
