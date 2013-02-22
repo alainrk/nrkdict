@@ -108,8 +108,17 @@ public class SingletonRequests {
         else return -1;
     }
     
-    public void modifyTerm (String word, String transl){
-    
+    public int modifyTerm (String word, String transl){
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term/word[text() = '"+word+"']/../transl");
+        if (nodes != null) {
+            Node newTransl = CURRENT_DICT_DOC.createTextNode(transl);
+            nodes.item(0).removeChild(nodes.item(0).getFirstChild());
+            nodes.item(0).appendChild(newTransl);
+            saveDocChanges(CURRENT_DICT_DOC, CURRENT_DICT_NAME);
+            System.out.println("DEBUGGING: modifyTerm, term modified");
+            return 0;
+        }
+        else return -1;
     }
     
     /* Return -1 if already exist the dictionary with "dict" name, else
