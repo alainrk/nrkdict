@@ -1,19 +1,17 @@
 /* TODO: See JAXB for XML definable by XMLSchema */
 package nrkdict;
 
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
-import com.sun.org.apache.xpath.internal.jaxp.XPathExpressionImpl;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+import javax.xml.xpath.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.*;
-import javax.xml.xpath.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
 
 
 /**
@@ -69,7 +67,8 @@ public class SingletonRequests {
         if (nodes == null){
             return null;
         }
-        ArrayList words = new ArrayList<String> (nodes.getLength());
+        ArrayList <String> words;
+        words = new ArrayList(nodes.getLength());
         for (int i=0;i<nodes.getLength();i++){
             words.add(nodes.item(i).getTextContent());
         }
@@ -80,8 +79,9 @@ public class SingletonRequests {
     public int createTerm (String word, String transl){
         // TODO: Check if already exist (USE XPATH ID OR SIMILAR IF POSSIBLE
         NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "terms");
-        if (nodes == null) 
+        if (nodes == null) {
             return -1;
+        }
         Element termEl = CURRENT_DICT_DOC.createElement("term");
         Element wordEl = CURRENT_DICT_DOC.createElement("word");
         Text wordTxt = CURRENT_DICT_DOC.createTextNode(word);
@@ -105,7 +105,9 @@ public class SingletonRequests {
             System.out.println("DEBUGGING: removeTerm, term removed");
             return 0;
         }
-        else return -1;
+        else {
+            return -1;
+        }
     }
     
     public int modifyTerm (String word, String transl){
@@ -118,7 +120,9 @@ public class SingletonRequests {
             System.out.println("DEBUGGING: modifyTerm, term modified");
             return 0;
         }
-        else return -1;
+        else {
+            return -1;
+        }
     }
     
     /* Return -1 if already exist the dictionary with "dict" name, else
@@ -146,7 +150,9 @@ public class SingletonRequests {
     public int removeDict (String dict){
         if (existDict(dict)) {
             // TODO: Set the next dictionary in XML, and not only set null value
-            if (dict == CURRENT_DICT_NAME) CURRENT_DICT_NAME = "";
+            if (dict.equals(CURRENT_DICT_NAME)) {
+                CURRENT_DICT_NAME = "";
+            }
             removeDictionary(dict);
             /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
             removeDictItemMap(dict);

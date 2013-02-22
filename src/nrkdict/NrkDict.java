@@ -28,13 +28,15 @@ public class NrkDict {
         //singletonRequests.removeDict("swit");
         //singletonRequests.removeDict("spen");
         //singletonRequests.removeDict("enit");
-        singletonRequests.loadDict("enit");
+        //singletonRequests.loadDict("spen");
+        //singletonRequests.removeDict("spen");
+        //singletonRequests.loadDict("enit");
         //singletonRequests.removeTerm("guardare");
         //singletonRequests.createTerm("guardare", "katsoa");
         //singletonRequests.createTerm("water", "acqua");
         //singletonRequests.createTerm("wait", "aspettare");
         //singletonRequests.createTerm("wine", "vino");
-        singletonRequests.modifyTerm("wool", "lana merinos");
+        //singletonRequests.modifyTerm("wool", "lana merinos");
         //singletonRequests.createTerm("ape", "scimmia");
         //singletonRequests.removeTerm("ape");
         //System.out.println(singletonRequests.getTransl("guardare"));

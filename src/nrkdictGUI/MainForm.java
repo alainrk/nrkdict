@@ -24,16 +24,16 @@ public class MainForm extends javax.swing.JFrame {
 
         DictjLabel = new javax.swing.JLabel();
         DictjComboBox = new javax.swing.JComboBox();
-        jComboBox1 = new javax.swing.JComboBox();
+        wordjComboBox = new javax.swing.JComboBox();
         DictjLabel1 = new javax.swing.JLabel();
-        DictjButton2 = new javax.swing.JButton();
-        DictjButton3 = new javax.swing.JButton();
+        removeDictjButton = new javax.swing.JButton();
+        addDictjButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        definitionjTextArea = new javax.swing.JTextArea();
         DictjLabel2 = new javax.swing.JLabel();
-        DictjButton4 = new javax.swing.JButton();
-        DictjButton5 = new javax.swing.JButton();
-        DictjButton6 = new javax.swing.JButton();
+        editDefinitionjButton = new javax.swing.JButton();
+        removeWordjButton = new javax.swing.JButton();
+        addWordjButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -43,35 +43,35 @@ public class MainForm extends javax.swing.JFrame {
 
         DictjComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        wordjComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         DictjLabel1.setText("Choose your dictionary:");
 
-        DictjButton2.setText("Remove");
-        DictjButton2.addActionListener(new java.awt.event.ActionListener() {
+        removeDictjButton.setText("Remove");
+        removeDictjButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DictjButton2ActionPerformed(evt);
+                removeDictjButtonActionPerformed(evt);
             }
         });
 
-        DictjButton3.setText("Add");
+        addDictjButton.setText("Add");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        definitionjTextArea.setColumns(20);
+        definitionjTextArea.setRows(5);
+        jScrollPane3.setViewportView(definitionjTextArea);
 
         DictjLabel2.setText("Definition:");
 
-        DictjButton4.setText("Edit definition");
+        editDefinitionjButton.setText("Edit definition");
 
-        DictjButton5.setText("Remove");
-        DictjButton5.addActionListener(new java.awt.event.ActionListener() {
+        removeWordjButton.setText("Remove");
+        removeWordjButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DictjButton5ActionPerformed(evt);
+                removeWordjButtonActionPerformed(evt);
             }
         });
 
-        DictjButton6.setText("Add");
+        addWordjButton.setText("Add");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,24 +80,24 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(DictjButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editDefinitionjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(wordjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(DictjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(DictjButton5)
+                                        .addComponent(removeWordjButton)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(DictjButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(addWordjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(DictjButton2)
+                                        .addComponent(removeDictjButton)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(DictjButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(addDictjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(DictjLabel1)
                             .addComponent(DictjLabel2)
                             .addComponent(DictjLabel))))
@@ -111,48 +111,48 @@ public class MainForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(DictjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DictjButton2)
-                    .addComponent(DictjButton3))
+                    .addComponent(removeDictjButton)
+                    .addComponent(addDictjButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DictjLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DictjButton5)
-                    .addComponent(DictjButton6))
+                    .addComponent(wordjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeWordjButton)
+                    .addComponent(addWordjButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(DictjLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(DictjButton4)
+                .addComponent(editDefinitionjButton)
                 .addContainerGap(61, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void DictjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DictjButton2ActionPerformed
+    private void removeDictjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDictjButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_DictjButton2ActionPerformed
+    }//GEN-LAST:event_removeDictjButtonActionPerformed
 
-    private void DictjButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DictjButton5ActionPerformed
+    private void removeWordjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeWordjButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_DictjButton5ActionPerformed
+    }//GEN-LAST:event_removeWordjButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton DictjButton2;
-    private javax.swing.JButton DictjButton3;
-    private javax.swing.JButton DictjButton4;
-    private javax.swing.JButton DictjButton5;
-    private javax.swing.JButton DictjButton6;
     private javax.swing.JComboBox DictjComboBox;
     private javax.swing.JLabel DictjLabel;
     private javax.swing.JLabel DictjLabel1;
     private javax.swing.JLabel DictjLabel2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton addDictjButton;
+    private javax.swing.JButton addWordjButton;
+    private javax.swing.JTextArea definitionjTextArea;
+    private javax.swing.JButton editDefinitionjButton;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton removeDictjButton;
+    private javax.swing.JButton removeWordjButton;
+    private javax.swing.JComboBox wordjComboBox;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JTextField AutoSearchjTextField;
 }
