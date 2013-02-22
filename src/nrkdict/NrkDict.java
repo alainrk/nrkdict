@@ -20,13 +20,15 @@ public class NrkDict {
         
         
         /* TESTING */
-        singletonRequests.createDict("enit");
-        singletonRequests.createDict("spen");
+        //singletonRequests.createDict("enit");
+        //singletonRequests.createDict("spen");
         //singletonRequests.removeDict("spen");
         //singletonRequests.removeDict("enit");
         singletonRequests.loadDict("enit");
-        singletonRequests.createTerm("water", "acqua");
-        System.out.println(singletonRequests.getTransl("water"));
+        //singletonRequests.createTerm("water", "acqua");
+        //singletonRequests.createTerm("ape", "scimmia");
+        singletonRequests.removeTerm("ape");
+        //System.out.println(singletonRequests.getTransl("water"));
         
     }
 }

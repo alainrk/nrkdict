@@ -98,8 +98,29 @@ public class SingletonRequests {
         }
     }
     
-    public void removeTerm (String word){
-    
+    public int removeTerm (String word){
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term[word[text() = '"+word+"']]");
+        if (nodes != null) {
+            nodes.item(0).getParentNode().removeChild(nodes.item(0));
+            
+            TransformerFactory transformerFactoryMap = TransformerFactory.newInstance();
+            Transformer transformer = null;
+            try {
+                transformer = transformerFactoryMap.newTransformer();
+            } catch (TransformerConfigurationException ex) {
+                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            DOMSource source = new DOMSource(CURRENT_DICT_DOC);
+            StreamResult result = new StreamResult(new File(CURRENT_DICT_NAME));
+            try {
+                transformer.transform(source, result);
+            } catch (TransformerException ex) {
+                Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("DEBUGGING: removeTerm, term removed");
+            return 0;
+        }
+        else return -1;
     }
     
     public void modifyTerm (String word, String transl){
