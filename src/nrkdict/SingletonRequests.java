@@ -62,6 +62,19 @@ public class SingletonRequests {
         return (nodes != null) ? nodes.item(0).getTextContent() : null;
     }
     
+    public ArrayList<String> getAllWords (){
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term/word");
+        if (nodes == null){
+            return null;
+        }
+        ArrayList <String> words;
+        words = new ArrayList(nodes.getLength());
+        for (int i=0;i<nodes.getLength();i++){
+            words.add(nodes.item(i).getTextContent());
+        }
+        return words;
+    }
+    
     public ArrayList<String> getWordsStartWith (String start){
         NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term/word[starts-with(.,'"+start+"')]");
         if (nodes == null){
@@ -123,6 +136,20 @@ public class SingletonRequests {
         else {
             return -1;
         }
+    }
+    
+    
+    public ArrayList<String> getAllDicts (){
+        NodeList nodes = getNodeListFromDoc(XML_MAP_DOC, "/dicts/dict/name");
+        if (nodes == null){
+            return null;
+        }
+        ArrayList <String> dicts;
+        dicts = new ArrayList(nodes.getLength());
+        for (int i=0;i<nodes.getLength();i++){
+            dicts.add(nodes.item(i).getTextContent());
+        }
+        return dicts;
     }
     
     /* Return -1 if already exist the dictionary with "dict" name, else

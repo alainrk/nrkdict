@@ -3,19 +3,28 @@
  * and open the template in the editor.
  */
 package nrkdictGUI;
+
+import nrkdict.NrkDict.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.*;
 /**
  *
  * @author narko
  */
-public class MainForm extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame {
+    private GuiController guiController;
 
-    /**
-     * Creates new form MainForm
-     */
-    public MainForm(){
+    public MainFrame(GuiController guiController){
         super("NrkDict");
+        this.guiController = guiController;
         initComponents();
         setVisible(true);
+        
+        setDictjComboBox();
+        setWordjComboBox();
     }
 
  
@@ -40,10 +49,6 @@ public class MainForm extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(500, 600));
 
         DictjLabel.setText("Select a word:");
-
-        DictjComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        wordjComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         DictjLabel1.setText("Choose your dictionary:");
 
@@ -154,5 +159,39 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton removeWordjButton;
     private javax.swing.JComboBox wordjComboBox;
     // End of variables declaration//GEN-END:variables
-    private javax.swing.JTextField AutoSearchjTextField;
+
+    
+    private void setDictjComboBox(){
+        ArrayList words = guiController.getAllDicts();
+        Iterator itr = words.iterator();
+        while (itr.hasNext()){
+            DictjComboBox.addItem(itr.next());
+            
+        }
+       DictjComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(e.getSource().toString());
+                //guiController.loadDict(e.getActionCommand());
+            }
+        });
+    }
+    
+    private void setWordjComboBox(){
+        ArrayList words = guiController.getAllWords();
+        Iterator itr = words.iterator();
+        while (itr.hasNext()){
+            wordjComboBox.addItem(itr.next());
+            
+        }
+        
+        ActionListener l = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("prova");
+            }
+        };
+        
+       wordjComboBox.addActionListener(l);
+    }
 }
