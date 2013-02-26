@@ -160,38 +160,37 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox wordjComboBox;
     // End of variables declaration//GEN-END:variables
 
-    
+    /* Set the dictionary combo box, onchange load selected dictionary */
     private void setDictjComboBox(){
         ArrayList words = guiController.getAllDicts();
         Iterator itr = words.iterator();
         while (itr.hasNext()){
-            DictjComboBox.addItem(itr.next());
-            
-        }
-       DictjComboBox.addActionListener(new ActionListener() {
+            DictjComboBox.addItem(itr.next());            
+        }        
+        DictjComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getSource().toString());
-                //guiController.loadDict(e.getActionCommand());
+                guiController.loadDict(DictjComboBox.getSelectedItem().toString());
+                setWordjComboBox();
             }
         });
     }
     
     private void setWordjComboBox(){
+        /* Clean */
+        if (wordjComboBox.getItemCount() != 0)
+            wordjComboBox.removeAllItems();
         ArrayList words = guiController.getAllWords();
         Iterator itr = words.iterator();
         while (itr.hasNext()){
-            wordjComboBox.addItem(itr.next());
-            
+            wordjComboBox.addItem(itr.next());            
         }
         
-        ActionListener l = new ActionListener() {
+        wordjComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("prova");
+                definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
             }
-        };
-        
-       wordjComboBox.addActionListener(l);
+        });
     }
 }

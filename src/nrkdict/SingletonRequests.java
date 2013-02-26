@@ -52,6 +52,7 @@ public class SingletonRequests {
         try {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             CURRENT_DICT_DOC = docBuilder.parse(CURRENT_DICT_NAME);
+            System.out.println("DEBUGGING: loadDict, dictionary loaded: "+dict);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(SingletonRequests.class.getName()).log(Level.SEVERE, null, ex);
         }
