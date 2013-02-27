@@ -24,7 +24,6 @@ public class MainFrame extends javax.swing.JFrame {
         setVisible(true);
         
         setDictjComboBox();
-        setWordjComboBox();
     }
 
  
@@ -178,19 +177,36 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void setWordjComboBox(){
         /* Clean */
-        if (wordjComboBox.getItemCount() != 0)
+        System.out.println(" DEBUGGING GUI setWordjComboBox, items: "+wordjComboBox.getItemCount());
+        if (wordjComboBox.getItemCount() != 0){
             wordjComboBox.removeAllItems();
-        ArrayList words = guiController.getAllWords();
-        Iterator itr = words.iterator();
-        while (itr.hasNext()){
-            wordjComboBox.addItem(itr.next());            
+        for(ActionListener al : wordjComboBox.getActionListeners())
+            wordjComboBox.removeActionListener(al);
         }
-        
-        wordjComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
+        ArrayList words = guiController.getAllWords();
+        if (words != null) {
+            /* If there are words in dictionary add them and set the listener to get translation */
+            Iterator itr = words.iterator();
+            while (itr.hasNext()){
+                wordjComboBox.addItem(itr.next());            
             }
-        });
+
+            wordjComboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    /* FIXME: VIENE LANCIATO QUESTO EVENTO IN OGNI CASO, AD ESEMPIO SU COMBOBOX CHANGED
+                     * MA OVVIAMENTE MI SERVE CHE L'AZIONE VENGA FATTA SOLO SUL CLICK
+                     * ATTUALMENTE PARTE ANCHE AL CARICAMENTO DEL NUOVO DIZIONARIO
+                     * CHE SVUOTA LA WORD COMBO BOX E QUINDI L-EVENTO DA ERRORE IN QUANTO
+                     * APPLICO TRANSLATION A ELEMENTO INESISTENTE (NULL POINTER EXC)
+                     */
+                    //if (e.getActionCommand().){}
+                    String word = wordjComboBox.getSelectedItem().toString();
+                    String transl = guiController.getTransl(word);
+                    definitionjTextArea.setText(transl);
+                    //definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
+                }
+            });
+        }
     }
 }
