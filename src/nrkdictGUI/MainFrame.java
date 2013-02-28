@@ -4,7 +4,6 @@
  */
 package nrkdictGUI;
 
-import nrkdict.NrkDict.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,13 +20,16 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class MainFrame extends javax.swing.JFrame {
     private GuiController guiController;
+    private boolean currentlyEditing;
 
     public MainFrame(GuiController guiController){
         super("NrkDict");
+        currentlyEditing = false;
         this.guiController = guiController;
         initComponents();
         setVisible(true);
         
+        /*********** LOGIC & BINDING ************/
         setDictjComboBox();
         /* Set combobox for autocompletion, editable so autocomplete is extendible to items not contained in comboBox */
         wordjComboBox.setEditable(true);
@@ -51,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         AutoCompleteDecorator.decorate(wordjComboBox);
+        definitionjTextArea.setEditable(false);
     }
 
  
@@ -95,6 +98,11 @@ public class MainFrame extends javax.swing.JFrame {
         DictjLabel2.setText("Definition:");
 
         editDefinitionjButton.setText("Edit definition");
+        editDefinitionjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editDefinitionjButtonMouseClicked(evt);
+            }
+        });
 
         removeWordjButton.setText("Remove");
         removeWordjButton.addActionListener(new java.awt.event.ActionListener() {
@@ -107,13 +115,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         searchjButton.setText("Search");
         searchjButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                searchjButtonMouseReleased(evt);
-            }
-        });
-        searchjButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                searchjButtonKeyPressed(evt);
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchjButtonMouseClicked(evt);
             }
         });
 
@@ -188,13 +191,29 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_removeWordjButtonActionPerformed
 
-    private void searchjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchjButtonKeyPressed
+    private void searchjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchjButtonMouseClicked
         loadDefinition();
-    }//GEN-LAST:event_searchjButtonKeyPressed
+    }//GEN-LAST:event_searchjButtonMouseClicked
 
-    private void searchjButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchjButtonMouseReleased
-        loadDefinition();
-    }//GEN-LAST:event_searchjButtonMouseReleased
+    private void editDefinitionjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editDefinitionjButtonMouseClicked
+        /* NOT Currently definition editing */
+        if (currentlyEditing == false){
+            currentlyEditing = true;
+            definitionjTextArea.setEditable(true);
+            editDefinitionjButton.setText("Save");
+        }
+        /* Currently definition editing */
+        else {
+            currentlyEditing = false;
+            definitionjTextArea.setEditable(false);
+            editDefinitionjButton.setText("Edit definition");
+            // Avoid error
+            if (wordjComboBox.getSelectedItem() != null){
+                guiController.modifyTerm(wordjComboBox.getSelectedItem().toString(), definitionjTextArea.getText());
+            }
+            
+        }
+    }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
@@ -222,6 +241,7 @@ public class MainFrame extends javax.swing.JFrame {
         DictjComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                resetDefinitionLayout();
                 guiController.loadDict(DictjComboBox.getSelectedItem().toString());
                 setWordjComboBox();
             }
@@ -246,11 +266,30 @@ public class MainFrame extends javax.swing.JFrame {
             while (itr.hasNext()){
                 wordjComboBox.addItem(itr.next());
             }
-
         }
+        wordjComboBox.addActionListener(new ActionListener() {
+            @Override
+            /* On selection in combo box, reset everything deal with definition */
+            public void actionPerformed(ActionEvent e) {
+                resetDefinitionLayout();
+                loadDefinition();
+            }
+        });
     }
     
     private void loadDefinition(){
+        resetDefinitionLayout();
         definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
+        definitionjTextArea.setEditable(false);
+    }
+    
+    /* Reset state of textarea, button etc.*/
+    private void resetDefinitionLayout(){
+        definitionjTextArea.removeAll();
+        if (currentlyEditing == true ){
+            currentlyEditing = false;
+            definitionjTextArea.setEditable(false);
+            editDefinitionjButton.setText("Edit definition");
+        }
     }
 }

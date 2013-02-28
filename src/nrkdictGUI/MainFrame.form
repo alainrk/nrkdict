@@ -168,6 +168,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Edit definition"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editDefinitionjButtonMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="removeWordjButton">
       <Properties>
@@ -187,8 +190,7 @@
         <Property name="text" type="java.lang.String" value="Search"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchjButtonMouseReleased"/>
-        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="searchjButtonKeyPressed"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchjButtonMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>
