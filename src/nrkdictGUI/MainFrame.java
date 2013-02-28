@@ -7,9 +7,14 @@ package nrkdictGUI;
 import nrkdict.NrkDict.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.*;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 /**
  *
  * @author narko
@@ -24,6 +29,28 @@ public class MainFrame extends javax.swing.JFrame {
         setVisible(true);
         
         setDictjComboBox();
+        /* Set combobox for autocompletion, editable so autocomplete is extendible to items not contained in comboBox */
+        wordjComboBox.setEditable(true);
+        /* LOOK AT THIS: In an editable combobox is the editor component that is focused, so i give it the listener */
+        wordjComboBox.getEditor().getEditorComponent().addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                int keyChar = e.getKeyChar();
+                if (keyChar == KeyEvent.VK_ENTER) {
+                    loadDefinition();
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+        AutoCompleteDecorator.decorate(wordjComboBox);
     }
 
  
@@ -42,6 +69,7 @@ public class MainFrame extends javax.swing.JFrame {
         editDefinitionjButton = new javax.swing.JButton();
         removeWordjButton = new javax.swing.JButton();
         addWordjButton = new javax.swing.JButton();
+        searchjButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -77,34 +105,48 @@ public class MainFrame extends javax.swing.JFrame {
 
         addWordjButton.setText("Add");
 
+        searchjButton.setText("Search");
+        searchjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                searchjButtonMouseReleased(evt);
+            }
+        });
+        searchjButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                searchjButtonKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(editDefinitionjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(wordjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(DictjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(removeWordjButton)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(addWordjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(removeDictjButton)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(addDictjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(DictjLabel1)
-                            .addComponent(DictjLabel2)
-                            .addComponent(DictjLabel))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(editDefinitionjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(wordjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(DictjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(removeWordjButton)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(addWordjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(removeDictjButton)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(addDictjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(DictjLabel1)
+                                .addComponent(DictjLabel2)
+                                .addComponent(DictjLabel))))
+                    .addComponent(searchjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -124,13 +166,15 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(wordjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removeWordjButton)
                     .addComponent(addWordjButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(DictjLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchjButton)
+                .addGap(18, 18, 18)
+                .addComponent(DictjLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(editDefinitionjButton)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pack();
@@ -144,6 +188,14 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_removeWordjButtonActionPerformed
 
+    private void searchjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchjButtonKeyPressed
+        loadDefinition();
+    }//GEN-LAST:event_searchjButtonKeyPressed
+
+    private void searchjButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchjButtonMouseReleased
+        loadDefinition();
+    }//GEN-LAST:event_searchjButtonMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
     private javax.swing.JLabel DictjLabel;
@@ -156,6 +208,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton removeDictjButton;
     private javax.swing.JButton removeWordjButton;
+    private javax.swing.JButton searchjButton;
     private javax.swing.JComboBox wordjComboBox;
     // End of variables declaration//GEN-END:variables
 
@@ -177,36 +230,27 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void setWordjComboBox(){
         /* Clean */
-        System.out.println(" DEBUGGING GUI setWordjComboBox, items: "+wordjComboBox.getItemCount());
+        System.out.println(" DEBUGGING GUI: setWordjComboBox, items: "+wordjComboBox.getItemCount());
         if (wordjComboBox.getItemCount() != 0){
+            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing items");
             wordjComboBox.removeAllItems();
-        for(ActionListener al : wordjComboBox.getActionListeners())
-            wordjComboBox.removeActionListener(al);
+            for(ActionListener al : wordjComboBox.getActionListeners()){
+//            wordjComboBox.removeActionListener(al);
+//            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing listeners: "+wordjComboBox.getActionListeners());
+            }
         }
         ArrayList words = guiController.getAllWords();
         if (words != null) {
             /* If there are words in dictionary add them and set the listener to get translation */
             Iterator itr = words.iterator();
             while (itr.hasNext()){
-                wordjComboBox.addItem(itr.next());            
+                wordjComboBox.addItem(itr.next());
             }
 
-            wordjComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    /* FIXME: VIENE LANCIATO QUESTO EVENTO IN OGNI CASO, AD ESEMPIO SU COMBOBOX CHANGED
-                     * MA OVVIAMENTE MI SERVE CHE L'AZIONE VENGA FATTA SOLO SUL CLICK
-                     * ATTUALMENTE PARTE ANCHE AL CARICAMENTO DEL NUOVO DIZIONARIO
-                     * CHE SVUOTA LA WORD COMBO BOX E QUINDI L-EVENTO DA ERRORE IN QUANTO
-                     * APPLICO TRANSLATION A ELEMENTO INESISTENTE (NULL POINTER EXC)
-                     */
-                    //if (e.getActionCommand().){}
-                    String word = wordjComboBox.getSelectedItem().toString();
-                    String transl = guiController.getTransl(word);
-                    definitionjTextArea.setText(transl);
-                    //definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
-                }
-            });
         }
+    }
+    
+    private void loadDefinition(){
+        definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
     }
 }
