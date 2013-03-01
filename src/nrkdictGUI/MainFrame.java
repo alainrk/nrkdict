@@ -42,6 +42,9 @@ public class MainFrame extends javax.swing.JFrame {
                 if (keyChar == KeyEvent.VK_ENTER) {
                     loadDefinition();
                 }
+                if (keyChar == KeyEvent.MOUSE_EVENT_MASK) {
+                    loadDefinition();
+                }
             }
 
             @Override
@@ -90,6 +93,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         addDictjButton.setText("Add");
+        addDictjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addDictjButtonMouseClicked(evt);
+            }
+        });
 
         definitionjTextArea.setColumns(20);
         definitionjTextArea.setRows(5);
@@ -215,6 +223,15 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
+    private void addDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addDictjButtonMouseClicked
+        System.out.println("sdfsdfsdfsdfsdfsdf");
+        JLayeredPane lpane = new JLayeredPane();
+        
+        AddDictPanel addDictPanel = new AddDictPanel();
+        this.add(lpane);
+        lpane.add(addDictPanel);
+    }//GEN-LAST:event_addDictjButtonMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
     private javax.swing.JLabel DictjLabel;
@@ -255,8 +272,8 @@ public class MainFrame extends javax.swing.JFrame {
             System.out.println(" DEBUGGING GUI: setWordjComboBox, removing items");
             wordjComboBox.removeAllItems();
             for(ActionListener al : wordjComboBox.getActionListeners()){
-//            wordjComboBox.removeActionListener(al);
-//            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing listeners: "+wordjComboBox.getActionListeners());
+            wordjComboBox.removeActionListener(al);
+            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing listeners: "+wordjComboBox.getActionListeners());
             }
         }
         ArrayList words = guiController.getAllWords();
