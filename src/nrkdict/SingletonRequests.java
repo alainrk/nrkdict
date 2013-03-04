@@ -157,7 +157,7 @@ public class SingletonRequests {
      * return 0, and create the item in XML map file and the XML dict file.
      */
     public int createDict (String dict){
-        if (!existDict(dict)){
+        if (!existDict(dict) && !dict.equals("")){
             /* CREATION XML: If dict does not exist is launched this catch, creates dict and return 0 
              * Same process of createXMLDictNameMapping, see above. */
             createEmptyDictionary(dict);
@@ -166,7 +166,7 @@ public class SingletonRequests {
             /* SUCCESS */
             return 0;
         } else {
-            System.out.println("DEBUGGING: createdict, dict already exist, return -1");
+            System.out.println("DEBUGGING: createdict, dict already exist or empty name, return -1");
             /* If dict already exist, it will not be created */
             return -1;
         }

@@ -1,8 +1,5 @@
 package nrkdict;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import javax.swing.JFrame;
 import nrkdictGUI.*;
 /**
  *

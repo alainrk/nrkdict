@@ -30,7 +30,7 @@ public class MainFrame extends javax.swing.JFrame {
         setVisible(true);
         
         /*********** LOGIC & BINDING ************/
-        setDictjComboBox();
+        loadDictjComboBox();
         /* Set combobox for autocompletion, editable so autocomplete is extendible to items not contained in comboBox */
         wordjComboBox.setEditable(true);
         /* LOOK AT THIS: In an editable combobox is the editor component that is focused, so i give it the listener */
@@ -86,9 +86,9 @@ public class MainFrame extends javax.swing.JFrame {
         DictjLabel1.setText("Choose your dictionary:");
 
         removeDictjButton.setText("Remove");
-        removeDictjButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeDictjButtonActionPerformed(evt);
+        removeDictjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeDictjButtonMouseClicked(evt);
             }
         });
 
@@ -191,10 +191,6 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void removeDictjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDictjButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_removeDictjButtonActionPerformed
-
     private void removeWordjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeWordjButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_removeWordjButtonActionPerformed
@@ -224,13 +220,23 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
     private void addDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addDictjButtonMouseClicked
-        System.out.println("sdfsdfsdfsdfsdfsdf");
-        JLayeredPane lpane = new JLayeredPane();
-        
+        /*JFrame addFrame = new JFrame("Add Dictionary");
         AddDictPanel addDictPanel = new AddDictPanel();
-        this.add(lpane);
-        lpane.add(addDictPanel);
+        addDictPanel.setSize(400, 400);
+        addFrame.add(addDictPanel);
+        addFrame.setVisible(true);
+        addFrame.setSize(400, 150);*/
+        AddDictPanel addDictPanel = new AddDictPanel();
+        JDialog addDialog = new JDialog(this, "Create new dictionary");
+        addDialog.setVisible(true);
+        addDialog.setSize(400, 150);
+        addDialog.add(addDictPanel);
+        //loadDictjComboBox();
     }//GEN-LAST:event_addDictjButtonMouseClicked
+
+    private void removeDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeDictjButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeDictjButtonMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
@@ -249,7 +255,14 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     /* Set the dictionary combo box, onchange load selected dictionary */
-    private void setDictjComboBox(){
+    private void loadDictjComboBox(){
+        if (DictjComboBox.getItemCount() != 0){            
+            DictjComboBox.removeAllItems();
+            for(ActionListener al : DictjComboBox.getActionListeners()){
+            DictjComboBox.removeActionListener(al);            
+            }
+        }
+        
         ArrayList words = guiController.getAllDicts();
         Iterator itr = words.iterator();
         while (itr.hasNext()){
@@ -259,21 +272,20 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resetDefinitionLayout();
-                guiController.loadDict(DictjComboBox.getSelectedItem().toString());
-                setWordjComboBox();
+                if (!DictjComboBox.getSelectedItem().equals(null))
+                    guiController.loadDict(DictjComboBox.getSelectedItem().toString());
+                loadWordjComboBox();
             }
         });
     }
     
-    private void setWordjComboBox(){
+    private void loadWordjComboBox(){
         /* Clean */
-        System.out.println(" DEBUGGING GUI: setWordjComboBox, items: "+wordjComboBox.getItemCount());
-        if (wordjComboBox.getItemCount() != 0){
-            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing items");
+        
+        if (wordjComboBox.getItemCount() != 0){            
             wordjComboBox.removeAllItems();
             for(ActionListener al : wordjComboBox.getActionListeners()){
-            wordjComboBox.removeActionListener(al);
-            System.out.println(" DEBUGGING GUI: setWordjComboBox, removing listeners: "+wordjComboBox.getActionListeners());
+            wordjComboBox.removeActionListener(al);            
             }
         }
         ArrayList words = guiController.getAllWords();

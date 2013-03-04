@@ -4,6 +4,8 @@
  */
 package nrkdictGUI;
 
+import nrkdict.*;
+
 /**
  *
  * @author narko
@@ -15,7 +17,7 @@ public class AddDictPanel extends javax.swing.JPanel {
      */
     public AddDictPanel() {        
         initComponents();
-        setVisible(true);
+        setVisible(true);       
     }
 
     /**
@@ -26,23 +28,22 @@ public class AddDictPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jPopupMenu2 = new javax.swing.JPopupMenu();
         jPopupMenu3 = new javax.swing.JPopupMenu();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        savejButton = new javax.swing.JButton();
+        canceljButton = new javax.swing.JButton();
 
         jLabel1.setText("Insert a name for your dictionary:");
 
-        jTextField1.setText("Name");
+        nameTextField.setText("");
 
-        jButton1.setText("Save");
+        savejButton.setText("Save");
 
-        jButton2.setText("Cancel");
+        canceljButton.setText("Cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -55,14 +56,14 @@ public class AddDictPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
+                    .addComponent(nameTextField)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 191, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(canceljButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(savejButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -71,24 +72,37 @@ public class AddDictPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(savejButton)
+                    .addComponent(canceljButton))
                 .addContainerGap())
         );
+        
+        savejButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+        savejButtonMouseClicked(evt);
+        }
+    });
+        
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton savejButton;
+    private javax.swing.JButton canceljButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPopupMenu jPopupMenu2;
     private javax.swing.JPopupMenu jPopupMenu3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nameTextField;
     // End of variables declaration//GEN-END:variables
+    
+    private void savejButtonMouseClicked(java.awt.event.MouseEvent evt){
+        System.out.println(" DEBUGGING GUI: savejButtonMouseClicked "+nameTextField.getText());
+        NrkDict.guiController.createDict(nameTextField.getText());
+        //this.getParent();
+    }
 }
