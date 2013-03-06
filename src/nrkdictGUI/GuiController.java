@@ -11,7 +11,7 @@ package nrkdictGUI;
 
 import java.util.ArrayList;
 import javax.swing.*;
-import nrkdict.SingletonRequests;
+import nrkdict.NrkDict;
 
 /**
  *
@@ -19,48 +19,30 @@ import nrkdict.SingletonRequests;
  */
 public class GuiController {
     public static MainFrame mainFrame;
-    private static SingletonRequests singletonRequests;
     
     public GuiController (){
-        singletonRequests = new SingletonRequests();
     }
     
     public void start(){
-        
-        /* LOGIC */
-        /* TESTING */
-        //singletonRequests.createDict("enit");
-        //singletonRequests.createDict("spen");
-        //singletonRequests.createDict("itfi");
-        //singletonRequests.removeDict("swit");
-        //singletonRequests.removeDict("spen");
-        //singletonRequests.removeDict("enit");
-        //singletonRequests.loadDict("spen");
-        //singletonRequests.removeDict("spen");
-        //singletonRequests.loadDict("spen");
-        //singletonRequests.removeTerm("guardare");
-        //singletonRequests.createTerm("water", "acqua");
-        //singletonRequests.createTerm("wait", "aspettare");
-        //singletonRequests.createTerm("wine", "vino");
-        //singletonRequests.createTerm("wool", "lana");
-        //singletonRequests.createTerm("sp1", "asdfasd");
-        //singletonRequests.createTerm("sp2", "aspeqwererqttare");
-        //singletonRequests.createTerm("sp3", "vinasdfaso");
-        //singletonRequests.createTerm("sp4", "asd");
-        //singletonRequests.modifyTerm("sp5", "wsrggtdfg");
-        //singletonRequests.createTerm("ape", "scimmia");
-        //singletonRequests.removeTerm("ape");
-        //System.out.println(singletonRequests.getTransl("guardare"));
-        
-        /*ArrayList words = new ArrayList<String> ();
-        words = singletonRequests.getWordsStartWith("wa");
-        Iterator itr = words.iterator();
-        while (itr.hasNext()){
-            System.out.println(itr.next());
-        }*/
-        //System.out.println(singletonRequests.getWordsStartWith("wa"));
-
-       /* LOGIC */
+        /* TESTING */  
+        /* INITIALIZE XMLS */
+//        NrkDict.singletonRequests.createDict("enit");
+//        NrkDict.singletonRequests.createDict("spen");
+//        NrkDict.singletonRequests.createDict("itfi");
+//        NrkDict.singletonRequests.loadDict("enit");
+//        NrkDict.singletonRequests.createTerm("water", "acqua");
+//        NrkDict.singletonRequests.createTerm("wait", "aspettare");
+//        NrkDict.singletonRequests.createTerm("wine", "vino");
+//        NrkDict.singletonRequests.createTerm("wool", "lana");
+//        NrkDict.singletonRequests.createTerm("ape", "scimmia");
+//        NrkDict.singletonRequests.loadDict("spen");
+//        NrkDict.singletonRequests.createTerm("sp1", "asdfasd");
+//        NrkDict.singletonRequests.createTerm("sp2", "aspeqwererqttare");
+//        NrkDict.singletonRequests.createTerm("sp3", "vinasdfaso");
+//        NrkDict.singletonRequests.createTerm("sp4", "asd");
+//        NrkDict.singletonRequests.createTerm("sp5", "wsrggtdfg");
+//        System.exit(0);
+        /*******************/
         
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -77,42 +59,42 @@ public class GuiController {
     
     /* Interface for MainFrame Requests */
     public void loadDict (String dict) {
-        singletonRequests.loadDict(dict);
+        NrkDict.singletonRequests.loadDict(dict);
     }
 
     public String getTransl (String word){
-        return singletonRequests.getTransl(word);
+        return NrkDict.singletonRequests.getTransl(word);
     }
 
     public ArrayList<String> getWordsStartWith (String start){
-        return singletonRequests.getWordsStartWith(start);
+        return NrkDict.singletonRequests.getWordsStartWith(start);
     }
     
     public ArrayList<String> getAllDicts (){
-        return singletonRequests.getAllDicts();
+        return NrkDict.singletonRequests.getAllDicts();
     }
     
     public ArrayList<String> getAllWords (){
-        return singletonRequests.getAllWords();
+        return NrkDict.singletonRequests.getAllWords();
     }
 
     public int createTerm (String word, String transl){
-        return singletonRequests.createTerm (word, transl);
+        return NrkDict.singletonRequests.createTerm (word, transl);
     }
 
     public int removeTerm (String word){
-        return singletonRequests.removeTerm (word);
+        return NrkDict.singletonRequests.removeTerm (word);
     }
 
     public int modifyTerm (String word, String transl){
-        return singletonRequests.modifyTerm (word, transl);
+        return NrkDict.singletonRequests.modifyTerm (word, transl);
     }
 
     public int createDict (String dict){
-        return singletonRequests.createDict(dict);
+        return NrkDict.singletonRequests.createDict(dict);
     }
 
     public int removeDict (String dict){
-        return singletonRequests.removeDict(dict);
+        return NrkDict.singletonRequests.removeDict(dict);
     }
 }

@@ -7,11 +7,11 @@ package nrkdictGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.*;
+import nrkdict.NrkDict;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
@@ -19,13 +19,11 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  * @author narko
  */
 public class MainFrame extends javax.swing.JFrame {
-    private GuiController guiController;
     private boolean currentlyEditing;
 
     public MainFrame(GuiController guiController){
         super("NrkDict");
         currentlyEditing = false;
-        this.guiController = guiController;
         initComponents();
         setVisible(true);
         
@@ -76,6 +74,7 @@ public class MainFrame extends javax.swing.JFrame {
         removeWordjButton = new javax.swing.JButton();
         addWordjButton = new javax.swing.JButton();
         searchjButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -159,6 +158,11 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(DictjLabel))))
                     .addComponent(searchjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 243, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 243, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,6 +190,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(editDefinitionjButton)
                 .addContainerGap(73, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 294, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 294, Short.MAX_VALUE)))
         );
 
         pack();
@@ -213,25 +222,14 @@ public class MainFrame extends javax.swing.JFrame {
             editDefinitionjButton.setText("Edit definition");
             // Avoid error
             if (wordjComboBox.getSelectedItem() != null){
-                guiController.modifyTerm(wordjComboBox.getSelectedItem().toString(), definitionjTextArea.getText());
+                NrkDict.guiController.modifyTerm(wordjComboBox.getSelectedItem().toString(), definitionjTextArea.getText());
             }
             
         }
     }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
     private void addDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addDictjButtonMouseClicked
-        /*JFrame addFrame = new JFrame("Add Dictionary");
-        AddDictPanel addDictPanel = new AddDictPanel();
-        addDictPanel.setSize(400, 400);
-        addFrame.add(addDictPanel);
-        addFrame.setVisible(true);
-        addFrame.setSize(400, 150);*/
-        AddDictPanel addDictPanel = new AddDictPanel();
-        JDialog addDialog = new JDialog(this, "Create new dictionary");
-        addDialog.setVisible(true);
-        addDialog.setSize(400, 150);
-        addDialog.add(addDictPanel);
-        //loadDictjComboBox();
+
     }//GEN-LAST:event_addDictjButtonMouseClicked
 
     private void removeDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeDictjButtonMouseClicked
@@ -248,6 +246,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea definitionjTextArea;
     private javax.swing.JButton editDefinitionjButton;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton removeDictjButton;
     private javax.swing.JButton removeWordjButton;
     private javax.swing.JButton searchjButton;
@@ -263,7 +262,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
         
-        ArrayList words = guiController.getAllDicts();
+        ArrayList words = NrkDict.guiController.getAllDicts();
         Iterator itr = words.iterator();
         while (itr.hasNext()){
             DictjComboBox.addItem(itr.next());            
@@ -273,7 +272,7 @@ public class MainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 resetDefinitionLayout();
                 if (!DictjComboBox.getSelectedItem().equals(null))
-                    guiController.loadDict(DictjComboBox.getSelectedItem().toString());
+                    NrkDict.guiController.loadDict(DictjComboBox.getSelectedItem().toString());
                 loadWordjComboBox();
             }
         });
@@ -288,7 +287,7 @@ public class MainFrame extends javax.swing.JFrame {
             wordjComboBox.removeActionListener(al);            
             }
         }
-        ArrayList words = guiController.getAllWords();
+        ArrayList words = NrkDict.guiController.getAllWords();
         if (words != null) {
             /* If there are words in dictionary add them and set the listener to get translation */
             Iterator itr = words.iterator();
@@ -308,7 +307,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void loadDefinition(){
         resetDefinitionLayout();
-        definitionjTextArea.setText(guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
+        definitionjTextArea.setText(NrkDict.guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
         definitionjTextArea.setEditable(false);
     }
     

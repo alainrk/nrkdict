@@ -10,9 +10,9 @@ public class NrkDict {
     public static GuiController guiController;
     
     public static void main(String[] args) {
+        singletonRequests = new SingletonRequests();
         /* GUI Creation */
         guiController = new GuiController();
-        /* GUI launch */
         guiController.start();
     }
     
