@@ -4,6 +4,7 @@
  */
 package nrkdictGUI;
 
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -23,6 +24,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame(GuiController guiController){
         super("NrkDict");
+        /* For editing words manage */
         currentlyEditing = false;
         initComponents();
         setVisible(true);
@@ -229,7 +231,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
     private void addDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addDictjButtonMouseClicked
-
+        AddDictJDialog addDictjdialog = new AddDictJDialog(this, true);
+        addDictjdialog.show();
+        addDictjdialog.setAlwaysOnTop(true);
+        
     }//GEN-LAST:event_addDictjButtonMouseClicked
 
     private void removeDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeDictjButtonMouseClicked

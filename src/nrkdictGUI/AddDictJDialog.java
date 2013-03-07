@@ -4,6 +4,9 @@
  */
 package nrkdictGUI;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import nrkdict.NrkDict;
 
 /**
@@ -18,6 +21,7 @@ public class AddDictJDialog extends javax.swing.JDialog {
     public AddDictJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setModalExclusionType(JDialog.ModalExclusionType.TOOLKIT_EXCLUDE);
     }
 
     /**
@@ -51,6 +55,11 @@ public class AddDictJDialog extends javax.swing.JDialog {
         });
 
         canceljButton.setText("Cancel");
+        canceljButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canceljButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,8 +100,22 @@ public class AddDictJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_savejButtonActionPerformed
 
     private void savejButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_savejButtonMouseClicked
-        NrkDict.guiController.createDict(namejTextField.getText());
+        int ret = NrkDict.guiController.createDict(namejTextField.getText());
+        if (ret < 0) {
+            JOptionPane jp = new JOptionPane();
+            JFrame jf = new JFrame();
+            JOptionPane.showMessageDialog(jf,
+                "Dict already exist or empty name!",
+                "Inane warning",
+                JOptionPane.WARNING_MESSAGE);
+            
+        }
+        
     }//GEN-LAST:event_savejButtonMouseClicked
+
+    private void canceljButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canceljButtonMouseClicked
+        dispose();
+    }//GEN-LAST:event_canceljButtonMouseClicked
 
     /**
      * @param args the command line arguments
