@@ -96,6 +96,11 @@ public class SingletonRequests {
         if (nodes == null) {
             return -1;
         }
+        NodeList nodes2 = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms/term[word[text() = '"+word+"']]");
+        /* Term already exist */
+        if (nodes2 != null) {
+            return -1;
+        }
         Element termEl = CURRENT_DICT_DOC.createElement("term");
         Element wordEl = CURRENT_DICT_DOC.createElement("word");
         Text wordTxt = CURRENT_DICT_DOC.createTextNode(word);

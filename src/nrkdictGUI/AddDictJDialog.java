@@ -48,11 +48,6 @@ public class AddDictJDialog extends javax.swing.JDialog {
                 savejButtonMouseClicked(evt);
             }
         });
-        savejButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                savejButtonActionPerformed(evt);
-            }
-        });
 
         canceljButton.setText("Cancel");
         canceljButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -95,10 +90,6 @@ public class AddDictJDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void savejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savejButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_savejButtonActionPerformed
-
     private void savejButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_savejButtonMouseClicked
         int ret = NrkDict.guiController.createDict(namejTextField.getText());
         if (ret < 0) {
@@ -110,7 +101,7 @@ public class AddDictJDialog extends javax.swing.JDialog {
                 JOptionPane.WARNING_MESSAGE);
             
         }
-        
+        dispose();
     }//GEN-LAST:event_savejButtonMouseClicked
 
     private void canceljButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canceljButtonMouseClicked

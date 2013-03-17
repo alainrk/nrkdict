@@ -121,6 +121,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         addWordjButton.setText("Add");
+        addWordjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addWordjButtonMouseClicked(evt);
+            }
+        });
 
         searchjButton.setText("Search");
         searchjButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -231,15 +236,23 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editDefinitionjButtonMouseClicked
 
     private void addDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addDictjButtonMouseClicked
-        AddDictJDialog addDictjdialog = new AddDictJDialog(this, true);
-        addDictjdialog.show();
-        addDictjdialog.setAlwaysOnTop(true);
-        
+        AddDictJDialog addDictJdialog = new AddDictJDialog(this, true);
+        addDictJdialog.show();
+        addDictJdialog.setAlwaysOnTop(true);
     }//GEN-LAST:event_addDictjButtonMouseClicked
 
     private void removeDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeDictjButtonMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_removeDictjButtonMouseClicked
+
+    private void addWordjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addWordjButtonMouseClicked
+        String term = "";
+        if (wordjComboBox.getSelectedItem() != null)
+            term = wordjComboBox.getSelectedItem().toString();
+        AddWordJDialog addWordJdialog = new AddWordJDialog(this, true, term);
+        addWordJdialog.show();
+        addWordJdialog.setAlwaysOnTop(true);
+    }//GEN-LAST:event_addWordjButtonMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
