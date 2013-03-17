@@ -274,6 +274,7 @@ public class MainFrame extends javax.swing.JFrame {
             if (option == JOptionPane.YES_OPTION) {
                 NrkDict.guiController.removeTerm(wordjComboBox.getSelectedItem().toString());
                 loadWordjComboBox();
+                resetDefinitionLayout();
             }
         }
     }//GEN-LAST:event_removeWordjButtonMouseClicked
