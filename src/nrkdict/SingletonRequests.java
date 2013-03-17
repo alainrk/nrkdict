@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 public class SingletonRequests {
     //private DocumentBuilderFactory dictDOMFactory;
     /* Name and corrispondent DOMDocument for DOM access dictNameMapping.xml */
-    private String XML_MAP_FILENAME = "dictNameMapping.xml";;
+    private String XML_MAP_FILENAME = "dictNameMapping.xml";
     private Document XML_MAP_DOC = null;
     /* Current Dictionary DOM XML */
     private Document CURRENT_DICT_DOC = null;
@@ -92,7 +92,7 @@ public class SingletonRequests {
     /* Create new term in current dictionary, on error return -1 */
     public int createTerm (String word, String transl){
         // TODO: Check if already exist (USE XPATH ID OR SIMILAR IF POSSIBLE
-        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "terms");
+        NodeList nodes = getNodeListFromDoc(CURRENT_DICT_DOC, "/terms");
         if (nodes == null) {
             return -1;
         }
@@ -168,6 +168,9 @@ public class SingletonRequests {
             createEmptyDictionary(dict);
             /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
             addDictItemMap(dict);
+            /* If this is the first dictionary set as CURRENT_DICT_DOC */
+            //FIXME: NodeList countDict = getNodeListFromDoc(XML_MAP_DOC, "count(/dicts/dict)");
+            //System.out.println("DEBUGGING: createDict, Number of dictionary: "+countDict);
             /* SUCCESS */
             return 0;
         } else {
