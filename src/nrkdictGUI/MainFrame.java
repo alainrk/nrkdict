@@ -114,6 +114,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         removeWordjButton.setText("Remove");
+        removeWordjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeWordjButtonMouseClicked(evt);
+            }
+        });
         removeWordjButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeWordjButtonActionPerformed(evt);
@@ -239,20 +244,37 @@ public class MainFrame extends javax.swing.JFrame {
         AddDictJDialog addDictJdialog = new AddDictJDialog(this, true);
         addDictJdialog.show();
         addDictJdialog.setAlwaysOnTop(true);
+        loadDictjComboBox();
     }//GEN-LAST:event_addDictjButtonMouseClicked
 
     private void removeDictjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeDictjButtonMouseClicked
-        // TODO add your handling code here:
+        int option = JOptionPane.showConfirmDialog (null, "Definitively remove \""+DictjComboBox.getSelectedItem().toString()+"\" dictionary ?");
+        if (option == JOptionPane.YES_OPTION) {
+            NrkDict.guiController.removeDict(DictjComboBox.getSelectedItem().toString());
+            loadDictjComboBox();
+            loadWordjComboBox();
+        }
     }//GEN-LAST:event_removeDictjButtonMouseClicked
 
     private void addWordjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addWordjButtonMouseClicked
         String term = "";
-        if (wordjComboBox.getSelectedItem() != null)
+        if (wordjComboBox.getSelectedItem() != null) {
             term = wordjComboBox.getSelectedItem().toString();
+        }
         AddWordJDialog addWordJdialog = new AddWordJDialog(this, true, term);
         addWordJdialog.show();
         addWordJdialog.setAlwaysOnTop(true);
     }//GEN-LAST:event_addWordjButtonMouseClicked
+
+    private void removeWordjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeWordjButtonMouseClicked
+        if (wordjComboBox.getSelectedItem() != null) {
+            int option = JOptionPane.showConfirmDialog (null, "Definitively remove \""+wordjComboBox.getSelectedItem().toString()+"\" term?");
+            if (option == JOptionPane.YES_OPTION) {
+                NrkDict.guiController.removeTerm(wordjComboBox.getSelectedItem().toString());
+                loadWordjComboBox();
+            }
+        }
+    }//GEN-LAST:event_removeWordjButtonMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox DictjComboBox;
@@ -289,7 +311,7 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resetDefinitionLayout();
-                if (!DictjComboBox.getSelectedItem().equals(null))
+                if (DictjComboBox.getSelectedItem() != null)
                     NrkDict.guiController.loadDict(DictjComboBox.getSelectedItem().toString());
                 loadWordjComboBox();
             }
@@ -325,7 +347,8 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void loadDefinition(){
         resetDefinitionLayout();
-        definitionjTextArea.setText(NrkDict.guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
+        if (wordjComboBox.getSelectedItem() != null)
+            definitionjTextArea.setText(NrkDict.guiController.getTransl(wordjComboBox.getSelectedItem().toString()));
         definitionjTextArea.setEditable(false);
     }
     
