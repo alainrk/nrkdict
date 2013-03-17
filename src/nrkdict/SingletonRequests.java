@@ -169,8 +169,9 @@ public class SingletonRequests {
             /* ADDING ITEM XMLMAP: Take the root element "dicts" (first item, index 0) with xpath */
             addDictItemMap(dict);
             /* If this is the first dictionary set as CURRENT_DICT_DOC */
-            //FIXME: NodeList countDict = getNodeListFromDoc(XML_MAP_DOC, "count(/dicts/dict)");
-            //System.out.println("DEBUGGING: createDict, Number of dictionary: "+countDict);
+            NodeList countDict = getNodeListFromDoc(XML_MAP_DOC, "/dicts/dict");
+            if (countDict.getLength() == 1)
+                loadDict(dict);
             /* SUCCESS */
             return 0;
         } else {
