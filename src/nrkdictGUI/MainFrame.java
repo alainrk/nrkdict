@@ -264,6 +264,8 @@ public class MainFrame extends javax.swing.JFrame {
         AddWordJDialog addWordJdialog = new AddWordJDialog(this, true, term);
         addWordJdialog.show();
         addWordJdialog.setAlwaysOnTop(true);
+        loadWordjComboBox();
+        loadDefinition();
     }//GEN-LAST:event_addWordjButtonMouseClicked
 
     private void removeWordjButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeWordjButtonMouseClicked
@@ -298,7 +300,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (DictjComboBox.getItemCount() != 0){            
             DictjComboBox.removeAllItems();
             for(ActionListener al : DictjComboBox.getActionListeners()){
-            DictjComboBox.removeActionListener(al);            
+                DictjComboBox.removeActionListener(al);            
             }
         }
         
@@ -324,7 +326,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (wordjComboBox.getItemCount() != 0){            
             wordjComboBox.removeAllItems();
             for(ActionListener al : wordjComboBox.getActionListeners()){
-            wordjComboBox.removeActionListener(al);            
+                wordjComboBox.removeActionListener(al);            
             }
         }
         ArrayList words = NrkDict.guiController.getAllWords();
